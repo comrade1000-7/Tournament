@@ -2,7 +2,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -18,26 +20,25 @@ public class GameTest {
 
     @BeforeEach
     public void setup() {
-        game.register(mira);
-        game.register(collapse);
-        game.register(miposhka);
-        game.register(yatoro);
-        game.register(toronto);
+        game.register("Ivan", mira);
+        game.register("Yaroslav", collapse);
+        game.register("Magomed", miposhka);
+        game.register("Sasha", yatoro);
+        game.register("Nikita", toronto);
     }
 
     @Test
     public void shouldRegisterPlayer () {
-        List<Player> expected = asList(mira, collapse, miposhka, yatoro, toronto, pgg);
-        game.register(pgg);
-        List<Player> actual = game.getRegisteredPlayers();
+        game.register("Vladimir", pgg);
+        Map<String, Player> actual = game.getRegisteredPlayers();
 
-        Assertions.assertArrayEquals(expected.toArray(), actual.toArray());
+        Assertions.assertTrue(actual.containsKey("Vladimir"));
     }
 
     @ParameterizedTest
     @CsvFileSource(files = "src/test/resources/resultOfGames.csv")
     public void roundTest (String player1, String player2, int expected) {
-        game.register(pgg);
+        game.register("Vladimir", pgg);
         int actual = game.round(player1, player2);
 
         Assertions.assertEquals(expected, actual);
